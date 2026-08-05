@@ -4,6 +4,7 @@ Environment Engine — Dynamically generates tasks for the AI civilization.
 
 import json
 import logging
+import random
 from typing import Dict, Any
 
 from ..llm.client import LLMClient
@@ -31,28 +32,37 @@ class Environment:
         Returns:
             Dict containing 'question' and 'answer' (ground truth).
         """
-        logger.info(f"[ENVIRONMENT] Generating new {domain} task at difficulty Level {difficulty}/10...")
+        # Inject extreme randomness by forcing a specific sub-topic
+        sub_topics = [
+            "geometry", "probability", "algebra", "number theory", "cryptography", 
+            "physics kinematics", "logical deduction", "riddles", "game theory", 
+            "combinatorics", "set theory", "lateral thinking"
+        ]
+        chosen_topic = random.choice(sub_topics)
+        
+        logger.info(f"[ENVIRONMENT] Generating new {chosen_topic} task at difficulty Level {difficulty}/10...")
         
         system_prompt = (
             "You are the Environment Engine for an AI Civilization simulation. "
-            "Your job is to generate a novel puzzle or problem for the AI society to solve.\n"
+            "Your job is to generate a COMPLETELY NOVEL puzzle or problem for the AI society to solve.\n"
             "CRITICAL INSTRUCTIONS:\n"
             "1. You must output raw JSON only. No markdown formatting, no backticks, no explanations.\n"
             "2. The JSON must have exactly two keys: 'question' and 'answer'.\n"
             "3. The 'answer' must be a concise, objective ground truth (e.g., '42', 'Yes', 'The Moon') so it can be automatically graded.\n"
-            "4. The problem must require step-by-step reasoning."
+            "4. The problem must require step-by-step reasoning.\n"
+            "5. BE HIGHLY CREATIVE. Never generate the same question twice."
         )
         
         user_prompt = (
-            f"Generate a {domain} problem at Difficulty Level {difficulty} out of 10.\n"
+            f"Generate a {domain} problem focusing specifically on {chosen_topic} at Difficulty Level {difficulty} out of 10.\n"
             f"- Level 1 means trivial arithmetic or basic facts.\n"
-            f"- Level 10 means extremely complex logical paradoxes or advanced multivariable math.\n\n"
+            f"- Level 10 means extremely complex logical paradoxes or advanced math.\n\n"
             f"Output the problem and its definitive answer in strict JSON format."
         )
 
         try:
-            # We want a very low temperature so the JSON formatting is strict and deterministic
-            response = self.llm.chat(system_prompt, user_prompt, temperature=0.2)
+            # We want a high temperature so the LLM acts highly creative and doesn't repeat questions
+            response = self.llm.chat(system_prompt, user_prompt, temperature=0.7)
             
             # Clean up the output in case the LLM ignored instructions and wrapped in markdown
             content = response.content.strip()
