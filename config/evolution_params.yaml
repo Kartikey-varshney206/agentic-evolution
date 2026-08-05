@@ -1,0 +1,60 @@
+# Evolution Parameters
+# Controls how the AI society evolves over generations
+
+evolution:
+  # How often to run evolution (every N tasks)
+  evolution_interval: 20
+
+  # Population bounds
+  min_population: 10
+  max_population: 60
+  initial_population: 8
+
+  # Selection
+  elite_fraction: 0.20        # top 20% protected from death
+  death_fraction: 0.10        # bottom 10% removed each cycle
+  tournament_size: 4           # tournament selection for parents
+
+  # Mutation
+  mutation_rate: 0.30          # probability of each trait mutating
+  prompt_mutation_rate: 0.25   # probability of system prompt mutation
+  strategy_mutation_rate: 0.20 # probability of reasoning strategy change
+  threshold_mutation_range: 0.15  # max change to confidence threshold
+
+  # Recombination
+  births_per_cycle: 2          # new agents born per evolution cycle
+  recombination_probability: 0.6  # vs cloning with mutation
+
+  # Fitness weights
+  fitness_weights:
+    accuracy: 0.40
+    reputation: 0.20
+    unique_contribution: 0.20
+    efficiency: 0.10
+    consistency: 0.10
+
+  # Diversity pressure
+  diversity_bonus: 0.05        # bonus fitness for being different from majority
+  min_role_types: 4            # minimum number of distinct roles in society
+
+governance:
+  # Voting thresholds (fraction needed to pass)
+  quorum:
+    add_agent: 0.50
+    remove_agent: 0.60
+    change_workflow: 0.60
+    change_rule: 0.75
+    change_governance: 0.80
+
+  # Safety
+  max_proposals_per_cycle: 3
+  rollback_window_generations: 5
+  human_veto_enabled: true
+
+workflow_evolution:
+  # How often to propose workflow changes
+  proposal_interval: 50        # every N tasks
+  ab_test_sample_size: 30      # tasks per A/B test
+  significance_threshold: 0.05 # p-value for adopting changes
+  max_stages: 8                # max pipeline stages
+  min_stages: 2                # min pipeline stages

@@ -1,0 +1,42 @@
+# Default Workflow Pipeline
+# Defines the stages a task goes through in the AI Society
+
+name: "baseline_v1"
+description: "Default multi-stage pipeline with planning, reasoning, critique, and synthesis"
+generation: 0
+
+stages:
+  - id: "plan"
+    role: "planner"
+    action: "Decompose the problem into sub-tasks and create an approach plan"
+    input_from: ["input"]
+    max_agents: 1
+    timeout_seconds: 60
+
+  - id: "reason"
+    role: "scientist,engineer,creative"
+    action: "Independently solve the problem using your expertise"
+    input_from: ["plan"]
+    max_agents: 3
+    timeout_seconds: 90
+
+  - id: "critique"
+    role: "skeptic"
+    action: "Review all proposed solutions, find flaws and weaknesses"
+    input_from: ["reason"]
+    max_agents: 1
+    timeout_seconds: 60
+
+  - id: "ethics_check"
+    role: "ethics"
+    action: "Evaluate solutions for safety, fairness, and unintended consequences"
+    input_from: ["reason"]
+    max_agents: 1
+    timeout_seconds: 30
+
+  - id: "synthesize"
+    role: "synthesizer"
+    action: "Combine all perspectives into a single coherent final answer"
+    input_from: ["reason", "critique", "ethics_check"]
+    max_agents: 1
+    timeout_seconds: 60

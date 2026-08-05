@@ -1,0 +1,11 @@
+# .gitignore
+__pycache__/
+*.pyc
+.env
+venv/
+*.egg-info/
+dist/
+build/
+civilization_state.json
+civilization.log
+.ruff_cache/
