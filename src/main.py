@@ -285,6 +285,13 @@ def main():
             question = task_data.get("question", "")
             answer = task_data.get("answer", "")
             
+            # Log the generated question to a file for overnight review
+            with open("generated_tasks.txt", "a", encoding="utf-8") as f:
+                f.write(f"--- Task {tasks_solved + 1} (Difficulty {difficulty}) ---\n")
+                f.write(f"Question: {question}\n")
+                f.write(f"Ground Truth: {answer}\n")
+                f.write(f"{'='*50}\n\n")
+            
             civ.solve(question, answer)
             civ.save()
             
