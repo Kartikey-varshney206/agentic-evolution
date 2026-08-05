@@ -24,7 +24,7 @@ from .agents.agent import Agent
 from .llm.client import LLMClient
 from .society.society import Society
 from .society.environment import Environment
-from .evolution.engine import EvolutionEngine, EvolutionConfig
+from .evolution.engine import EvolutionEngine, EvolutionConfig, GenerationRecord
 from .governance.governance import GovernanceEngine, ProposalType, ProposalStatus, Proposal
 from .workflow.pipeline import WorkflowPipeline, WorkflowEvolver
 
@@ -250,6 +250,7 @@ class Civilization:
             aid: a.to_dict() for aid, a in self.society.archived_agents.items()
         }
         state["governance_history"] = self.governance.get_history()
+        state["evolution_history_data"] = self.evolution.get_evolution_summary()
 
         with open(path, "w", encoding="utf-8") as f:
             json.dump(state, f, indent=2)
@@ -279,6 +280,11 @@ class Civilization:
         # Update society stats
         self.society.generation = self.generation
         self.society.tasks_processed = self.total_tasks
+        
+        # Load evolution history
+        self.evolution.history.clear()
+        for record_data in state.get("evolution_history_data", []):
+            self.evolution.history.append(GenerationRecord.from_dict(record_data))
             
         logger.info(f"Civilization state loaded from {path} (Gen {self.generation})")
 

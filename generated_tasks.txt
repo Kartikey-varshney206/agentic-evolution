@@ -53,3 +53,18 @@ Question: In a standard Prisoner's Dilemma payoff matrix where mutual cooperatio
 Ground Truth: Defect
 ==================================================
 
+--- Task 2 (Difficulty 1) ---
+Question: I have 3 apples. You take away 2. How many apples do you have?
+Ground Truth: 2
+==================================================
+
+--- Task 3 (Difficulty 1) ---
+Question: In a Caesar cipher with a shift of 3, the letter 'A' becomes 'D'. If you encrypt the word 'CAT' using this same shift, what is the resulting three-letter ciphertext?
+Ground Truth: FDW
+==================================================
+
+--- Task 4 (Difficulty 1) ---
+Question: I am a number. If you add me to myself, you get 10. What number am I?
+Ground Truth: 5
+==================================================
+

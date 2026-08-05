@@ -116,6 +116,20 @@ class GenerationRecord:
             "stats": self.stats,
         }
 
+    @classmethod
+    def from_dict(cls, data: dict) -> "GenerationRecord":
+        return cls(
+            generation=data["generation"],
+            timestamp=data["timestamp"],
+            population_before=data["population"]["before"],
+            population_after=data["population"]["after"],
+            agents_born=data["born"],
+            agents_died=data["died"],
+            agents_mutated=data["mutated"],
+            elite_agents=data.get("elite", []),
+            stats=data["stats"],
+        )
+
 
 class EvolutionEngine:
     """
