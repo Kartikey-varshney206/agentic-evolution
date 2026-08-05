@@ -29,13 +29,17 @@ from .governance.governance import GovernanceEngine, ProposalType
 from .workflow.pipeline import WorkflowPipeline, WorkflowEvolver
 
 # ── Logging Setup ──
+# Force UTF-8 encoding on Windows to prevent cp1252 charmap crashes
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding='utf-8')
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)-7s | %(message)s",
     datefmt="%H:%M:%S",
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler("civilization.log", mode="a"),
+        logging.FileHandler("civilization.log", mode="a", encoding="utf-8"),
     ],
 )
 logger = logging.getLogger(__name__)
@@ -106,8 +110,9 @@ class Civilization:
             status = "[CORRECT]" if result.correct else "[WRONG]"
 
         logger.info(
-            f"Task {result.task_id} {status}: "
-            f"{task[:60]}... -> {result.final_answer[:80]}..."
+            f"\nTask {result.task_id} {status}\n"
+            f"Question: {task}\n"
+            f"Final Answer: {result.final_answer}\n"
         )
 
         # ── Check if evolution should trigger ──
