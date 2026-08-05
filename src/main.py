@@ -370,37 +370,44 @@ def main():
         if tasks_solved > 0:
             logger.info(f"Resuming from Task {tasks_solved + 1} (Difficulty {difficulty})")
         
+        import time
         while True:
-            # Generate dynamic task
-            task_data = env.generate_task(difficulty=difficulty)
-            
-            logger.info(f"--- Infinite Task {tasks_solved + 1} (Difficulty {difficulty}) ---")
-            
-            question = task_data.get("question", "")
-            answer = task_data.get("answer", "")
-            
-            # Log the generated question to a file for overnight review
-            with open("generated_tasks.txt", "a", encoding="utf-8") as f:
-                f.write(f"--- Task {tasks_solved + 1} (Difficulty {difficulty}) ---\n")
-                f.write(f"Question: {question}\n")
-                f.write(f"Ground Truth: {answer}\n")
-                f.write(f"{'='*50}\n\n")
-            
-            civ.solve(question, answer)
-            civ.save()
-            
-            tasks_solved += 1
-            
-            # Bump difficulty every 5 tasks
-            if tasks_solved % 5 == 0 and difficulty < 10:
-                difficulty += 1
-                logger.info(f"\n[ENVIRONMENT] Global difficulty raised to {difficulty}/10!\n")
+            try:
+                # Generate dynamic task
+                task_data = env.generate_task(difficulty=difficulty)
                 
-            # Trigger Governance Elections every 10 tasks
-            if tasks_solved % 10 == 0:
-                logger.info(f"\n[GOVERNANCE] Initiating democratic election cycle...\n")
-                civ.run_governance_cycle()
+                logger.info(f"--- Infinite Task {tasks_solved + 1} (Difficulty {difficulty}) ---")
+                
+                question = task_data.get("question", "")
+                answer = task_data.get("answer", "")
+                
+                # Log the generated question to a file for overnight review
+                with open("generated_tasks.txt", "a", encoding="utf-8") as f:
+                    f.write(f"--- Task {tasks_solved + 1} (Difficulty {difficulty}) ---\n")
+                    f.write(f"Question: {question}\n")
+                    f.write(f"Ground Truth: {answer}\n")
+                    f.write(f"{'='*50}\n\n")
+                
+                civ.solve(question, answer)
                 civ.save()
+                
+                tasks_solved += 1
+                
+                # Bump difficulty every 5 tasks
+                if tasks_solved % 5 == 0 and difficulty < 10:
+                    difficulty += 1
+                    logger.info(f"\n[ENVIRONMENT] Global difficulty raised to {difficulty}/10!\n")
+                    
+                # Trigger Governance Elections every 10 tasks
+                if tasks_solved % 10 == 0:
+                    logger.info(f"\n[GOVERNANCE] Initiating democratic election cycle...\n")
+                    civ.run_governance_cycle()
+                    civ.save()
+                    
+            except Exception as e:
+                logger.error(f"Fatal error during loop (Rate Limit or API Crash): {e}. Sleeping 60s...")
+                time.sleep(60)
+                continue
 
     else:
         # Run standard demo tasks

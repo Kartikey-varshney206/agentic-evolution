@@ -68,3 +68,35 @@ Question: I am a number. If you add me to myself, you get 10. What number am I?
 Ground Truth: 5
 ==================================================
 
+--- Task 4 (Difficulty 1) ---
+Question: A farmer has 17 sheep. All but 9 run away. How many sheep does the farmer have left?
+Ground Truth: 9
+==================================================
+
+--- Task 4 (Difficulty 1) ---
+Question: Let set A = {1, 2, 3} and set B = {3, 4, 5}. What is the intersection of A and B (A ∩ B)?
+Ground Truth: {3}
+==================================================
+
+--- Task 4 (Difficulty 1) ---
+Question: A square has a side length of 5 centimeters. What is its perimeter in centimeters?
+Ground Truth: 20
+==================================================
+
+--- Task 5 (Difficulty 1) ---
+Question: A robot has 3 different colored heads (Red, Blue, Green) and 2 different colored bodies (Silver, Gold). If an outfit consists of exactly one head and one body, how many distinct outfits can the robot wear?
+Ground Truth: 6
+==================================================
+
+--- Task 6 (Difficulty 2) ---
+Question: Two rival coffee shops, Bean & Brew and Daily Grind, simultaneously decide whether to open at 7 AM (Early) or 9 AM (Late). The payoff matrix (profits in thousands) is:
+
+- Both Early: (4, 4)
+- Both Late: (6, 6)
+- Bean & Brew Early, Daily Grind Late: (8, 2)
+- Bean & Brew Late, Daily Grind Early: (2, 8)
+
+Assuming both shops are rational and aim to maximize their own profit, what is the pure-strategy Nash Equilibrium of this game?
+Ground Truth: (Early, Early)
+==================================================
+
