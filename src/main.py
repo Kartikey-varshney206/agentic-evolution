@@ -25,7 +25,7 @@ from .llm.client import LLMClient
 from .society.society import Society
 from .society.environment import Environment
 from .evolution.engine import EvolutionEngine, EvolutionConfig
-from .governance.governance import GovernanceEngine, ProposalType
+from .governance.governance import GovernanceEngine, ProposalType, ProposalStatus, Proposal
 from .workflow.pipeline import WorkflowPipeline, WorkflowEvolver
 
 # ── Logging Setup ──
@@ -171,9 +171,61 @@ class Civilization:
 
         # Auto-propose a change based on stats
         proposal = self.governance.auto_propose(alive_agents, stats)
-        if proposal and proposal.status != "rejected":
+        if proposal and proposal.status != ProposalStatus.REJECTED:
             # Run the vote
             self.governance.run_vote(proposal, alive_agents)
+            
+            # Enact if accepted
+            if proposal.status == ProposalStatus.ACCEPTED:
+                self._enact_proposal(proposal)
+
+    def _enact_proposal(self, proposal: Proposal) -> None:
+        """Physically apply the accepted proposal to the civilization."""
+        logger.info(f"\n⚡ ENACTING PROPOSAL: {proposal.proposal_type.value}")
+        
+        try:
+            if proposal.proposal_type == ProposalType.ADD_AGENT:
+                best_agent = max(self.society.get_alive_agents(), key=lambda a: a.compute_fitness())
+                new_agent = Agent(
+                    name=f"{best_agent.name}_clone",
+                    role=best_agent.role,
+                    generation=self.generation,
+                    parents=[best_agent.id],
+                    system_prompt=best_agent.system_prompt,
+                    reasoning_strategy=best_agent.reasoning_strategy,
+                    tool_policy=best_agent.tool_policy,
+                    memory_strategy=best_agent.memory_strategy,
+                )
+                self.society.agents[new_agent.id] = new_agent
+                logger.info(f"  -> Added new agent: {new_agent.name} ({new_agent.role})")
+                
+            elif proposal.proposal_type == ProposalType.REMOVE_AGENT:
+                alive = self.society.get_alive_agents()
+                if len(alive) > 10: # Constitution minimum
+                    worst_agent = min(alive, key=lambda a: a.compute_fitness())
+                    worst_agent.alive = False
+                    worst_agent.archived_at = "governance_removed"
+                    self.society.archived_agents[worst_agent.id] = worst_agent
+                    del self.society.agents[worst_agent.id]
+                    logger.info(f"  -> Removed agent: {worst_agent.name}")
+                else:
+                    logger.warning("  -> Cannot remove agent: population at constitution minimum (10).")
+                    
+            elif proposal.proposal_type == ProposalType.CHANGE_WORKFLOW:
+                new_workflow = self.workflow_evolver.propose_mutation(self.workflow, self.society.get_stats())
+                self.workflow = new_workflow
+                logger.info(f"  -> Workflow changed to: {self.workflow.name}")
+                
+            elif proposal.proposal_type in (ProposalType.CHANGE_RULE, ProposalType.CHANGE_GOVERNANCE):
+                new_rule = f"RULE: {proposal.title}"
+                self.governance.constitution.append(new_rule)
+                logger.info(f"  -> Added new constitution rule: {new_rule}")
+                
+            proposal.status = ProposalStatus.ADOPTED
+            
+        except Exception as e:
+            logger.error(f"  -> Failed to enact proposal: {e}")
+            proposal.status = ProposalStatus.ROLLED_BACK
 
     def get_status(self) -> dict:
         """Get comprehensive civilization status."""
