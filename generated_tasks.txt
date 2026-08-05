@@ -1,0 +1,45 @@
+--- Task 1 (Difficulty 1) ---
+Question: A square has a perimeter of 20 units. What is the length of one side?
+Ground Truth: 5
+==================================================
+
+--- Task 2 (Difficulty 1) ---
+Question: How many degrees are in a right angle?
+Ground Truth: 90
+==================================================
+
+--- Task 3 (Difficulty 1) ---
+Question: If you multiply the smallest prime number by the smallest composite number, what is the result?
+Ground Truth: 8
+==================================================
+
+--- Task 4 (Difficulty 1) ---
+Question: Solve for x: x + 7 = 15
+Ground Truth: 8
+==================================================
+
+--- Task 5 (Difficulty 1) ---
+Question: What is the smallest positive integer that is divisible by both 3 and 5?
+Ground Truth: 15
+==================================================
+
+--- Task 6 (Difficulty 2) ---
+Question: A man lives on the 12th floor of an apartment building. Every morning he takes the elevator down to the ground floor to go to work. When he returns, if it is raining, or if there are other people in the elevator, he goes directly to the 12th floor. Otherwise, he goes to the 10th floor and walks up two flights of stairs to his apartment. Why?
+Ground Truth: The man is too short to reach the button for the 12th floor. He can only reach the 10th floor button, unless he uses an umbrella (when raining) or asks someone else to press it.
+==================================================
+
+--- Task 7 (Difficulty 2) ---
+Question: A bag contains 3 red marbles, 4 blue marbles, and 5 green marbles. If you draw one marble at random, what is the probability that it is NOT blue?
+Ground Truth: 2/3
+==================================================
+
+--- Task 8 (Difficulty 2) ---
+Question: I have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?
+Ground Truth: A map
+==================================================
+
+--- Task 9 (Difficulty 2) ---
+Question: What is the smallest positive integer that leaves a remainder of 2 when divided by 3, and a remainder of 3 when divided by 5?
+Ground Truth: 8
+==================================================
+

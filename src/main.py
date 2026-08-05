@@ -301,6 +301,12 @@ def main():
             if tasks_solved % 5 == 0 and difficulty < 10:
                 difficulty += 1
                 logger.info(f"\n[ENVIRONMENT] Global difficulty raised to {difficulty}/10!\n")
+                
+            # Trigger Governance Elections every 10 tasks
+            if tasks_solved % 10 == 0:
+                logger.info(f"\n[GOVERNANCE] Initiating democratic election cycle...\n")
+                civ.run_governance_cycle()
+                civ.save()
 
     else:
         # Run standard demo tasks
