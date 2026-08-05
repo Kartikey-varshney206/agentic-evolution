@@ -64,6 +64,18 @@ class MemoryEntry:
             "importance": self.importance,
         }
 
+    @classmethod
+    def from_dict(cls, data: dict) -> "MemoryEntry":
+        return cls(
+            timestamp=data["timestamp"],
+            task_id=data.get("task_id", ""),
+            task_description=data.get("task", ""),
+            agent_response=data.get("response", ""),
+            was_correct=data.get("correct", False),
+            feedback=data.get("feedback", ""),
+            importance=data.get("importance", 0.5),
+        )
+
 
 @dataclass
 class AgentMemory:
@@ -112,10 +124,25 @@ class AgentMemory:
 
     def to_dict(self) -> dict:
         return {
+            "episodic": [e.to_dict() for e in self.episodic],
+            "max_episodic": self.max_episodic,
+            "semantic": self.semantic,
+            "social": self.social,
+            # Backwards compatibility for dashboard
             "episodic_count": len(self.episodic),
             "semantic_count": len(self.semantic),
             "social_connections": len(self.social),
         }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "AgentMemory":
+        episodic = [MemoryEntry.from_dict(e) for e in data.get("episodic", [])]
+        return cls(
+            episodic=episodic,
+            max_episodic=data.get("max_episodic", 100),
+            semantic=data.get("semantic", {}),
+            social=data.get("social", {}),
+        )
 
 
 @dataclass
@@ -251,16 +278,48 @@ class Agent:
             "generation": self.generation,
             "parents": self.parents,
             "born_at": self.born_at,
+            "system_prompt": self.system_prompt,
             "reasoning_strategy": self.reasoning_strategy,
+            "tool_policy": self.tool_policy,
+            "memory_strategy": self.memory_strategy,
             "confidence_threshold": self.confidence_threshold,
             "tasks_attempted": self.tasks_attempted,
+            "tasks_correct": self.tasks_correct,
+            "total_contribution_score": self.total_contribution_score,
             "accuracy": round(self.accuracy, 3),
             "reputation": round(self.reputation_score, 3),
             "fitness": self.compute_fitness(),
             "alive": self.alive,
+            "archived_at": self.archived_at,
             "age": self.age,
             "memory": self.memory.to_dict(),
         }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "Agent":
+        """Reconstruct agent from dict."""
+        agent = cls(
+            id=data.get("id", str(uuid.uuid4())[:12]),
+            name=data.get("name", "Agent"),
+            role=data.get("role", "generalist"),
+            generation=data.get("generation", 0),
+            parents=data.get("parents", []),
+            born_at=data.get("born_at", datetime.now().isoformat()),
+            system_prompt=data.get("system_prompt", "You are a helpful AI assistant."),
+            reasoning_strategy=data.get("reasoning_strategy", "chain-of-thought"),
+            tool_policy=data.get("tool_policy", "reason first, search only if lacking domain knowledge"),
+            memory_strategy=data.get("memory_strategy", "remember successful reasoning patterns"),
+            confidence_threshold=data.get("confidence_threshold", 0.7),
+            tasks_attempted=data.get("tasks_attempted", 0),
+            tasks_correct=data.get("tasks_correct", 0),
+            total_contribution_score=data.get("total_contribution_score", 0.0),
+            reputation_score=data.get("reputation", 0.5),
+            age=data.get("age", 0),
+            alive=data.get("alive", True),
+            archived_at=data.get("archived_at"),
+            memory=AgentMemory.from_dict(data.get("memory", {})),
+        )
+        return agent
 
     def __repr__(self) -> str:
         return (

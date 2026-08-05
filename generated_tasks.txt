@@ -43,3 +43,13 @@ Question: What is the smallest positive integer that leaves a remainder of 2 whe
 Ground Truth: 8
 ==================================================
 
+--- Task 1 (Difficulty 1) ---
+Question: A bag contains 3 red marbles and 2 blue marbles. If one marble is drawn at random, what is the probability that it is red? Express your answer as a simplified fraction.
+Ground Truth: 3/5
+==================================================
+
+--- Task 2 (Difficulty 1) ---
+Question: In a standard Prisoner's Dilemma payoff matrix where mutual cooperation yields (3, 3), mutual defection yields (1, 1), and unilateral defection yields (5, 0) for the defector, what is the dominant strategy for a rational player?
+Ground Truth: Defect
+==================================================
+

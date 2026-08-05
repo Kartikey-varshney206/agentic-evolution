@@ -194,11 +194,41 @@ class Civilization:
         state["agents"] = {
             aid: a.to_dict() for aid, a in self.society.agents.items()
         }
+        state["archived_agents"] = {
+            aid: a.to_dict() for aid, a in self.society.archived_agents.items()
+        }
         state["governance_history"] = self.governance.get_history()
 
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             json.dump(state, f, indent=2)
         logger.info(f"Civilization saved to {path}")
+
+    def load(self, path: str = "civilization_state.json") -> None:
+        """Load the civilization state from file."""
+        if not Path(path).exists():
+            return
+            
+        with open(path, "r", encoding="utf-8") as f:
+            state = json.load(f)
+            
+        self.generation = state.get("generation", 0)
+        self.total_tasks = state.get("total_tasks", 0)
+        
+        # Load agents
+        self.society.agents.clear()
+        for aid, adata in state.get("agents", {}).items():
+            self.society.agents[aid] = Agent.from_dict(adata)
+            
+        # Load archived agents
+        self.society.archived_agents.clear()
+        for aid, adata in state.get("archived_agents", {}).items():
+            self.society.archived_agents[aid] = Agent.from_dict(adata)
+            
+        # Update society stats
+        self.society.generation = self.generation
+        self.society.tasks_processed = self.total_tasks
+            
+        logger.info(f"Civilization state loaded from {path} (Gen {self.generation})")
 
 
 # ── Sample Tasks for Demo ──
@@ -272,9 +302,15 @@ def main():
         print("  Running INFINITE dynamic tasks...")
         print("─" * 60 + "\n")
         
+        # Load previous state if it exists
+        civ.load()
+        
         env = Environment(llm_client=civ.llm)
-        difficulty = 1
-        tasks_solved = 0
+        tasks_solved = civ.total_tasks
+        difficulty = min(10, 1 + (tasks_solved // 5))
+        
+        if tasks_solved > 0:
+            logger.info(f"Resuming from Task {tasks_solved + 1} (Difficulty {difficulty})")
         
         while True:
             # Generate dynamic task
