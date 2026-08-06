@@ -140,9 +140,48 @@ class WorkflowEngine:
         final_stage_id = stages[-1].id if stages else "input"
         final_answer = stage_outputs.get(final_stage_id, "")
         
+        # Format individual responses as strings
+        formatted_responses = {k: "\n\n".join(v) for k, v in individual_responses.items()}
+        
+        # Score contributions
+        contributions = self._score_contributions(formatted_responses, final_answer)
+        
         return {
             "final_answer": final_answer,
-            "individual_responses": dict(individual_responses),
+            "individual_responses": formatted_responses,
             "discussion_log": discussion_log,
-            "stage_outputs": stage_outputs
+            "stage_outputs": stage_outputs,
+            "contributions": contributions,
         }
+
+    def _score_contributions(
+        self,
+        responses: dict[str, str],
+        final_answer: str,
+    ) -> dict[str, float]:
+        """
+        Score how much each agent contributed to the final answer.
+
+        Simple heuristic: longer, more substantive responses that align
+        with the final answer get higher scores.
+        """
+        contributions: dict[str, float] = {}
+        final_words = set(final_answer.lower().split())
+
+        for agent_id, response in responses.items():
+            resp_words = set(response.lower().split())
+
+            # Overlap with final answer (crude but functional)
+            if final_words:
+                overlap = len(resp_words & final_words) / len(final_words)
+            else:
+                overlap = 0.0
+
+            # Length bonus (substantive responses)
+            length_score = min(len(response) / 500, 1.0)
+
+            contributions[agent_id] = round(
+                0.6 * overlap + 0.4 * length_score, 3
+            )
+
+        return contributions
