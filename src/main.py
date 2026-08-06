@@ -102,12 +102,16 @@ class Civilization:
         3. Returns the result
         """
         # ── Solve via society ──
-        result = self.society.solve(task, ground_truth)
+        result = self.society.solve(task, ground_truth, self.workflow)
         self.total_tasks += 1
 
         status = ""
         if result.correct is not None:
             status = "[CORRECT]" if result.correct else "[WRONG]"
+            self.workflow.tasks_tested += 1
+            if result.correct:
+                self.workflow.tasks_correct += 1
+            self.workflow.fitness_score = self.workflow.accuracy
 
         logger.info(
             f"\nTask {result.task_id} {status}\n"
@@ -161,6 +165,17 @@ class Civilization:
         )
         self.society.generation = self.generation
 
+        # ── Workflow Evaluation (A/B Test) ──
+        if self.workflow.parent_pipeline and len(self.workflow_evolver.pipeline_history) > 0:
+            parent = self.workflow_evolver.pipeline_history[-1]
+            if self.workflow.tasks_tested >= 5:
+                if self.workflow.accuracy < parent.accuracy:
+                    logger.warning(f"[WORKFLOW] {self.workflow.name} underperformed ({self.workflow.accuracy:.1%} vs {parent.accuracy:.1%}). Rolling back to {parent.name}!")
+                    self.workflow = parent
+                else:
+                    logger.info(f"[WORKFLOW] {self.workflow.name} succeeded ({self.workflow.accuracy:.1%} vs {parent.accuracy:.1%}). Adopted permanently!")
+                    self.workflow.parent_pipeline = None  # Make it permanent
+
     def run_governance_cycle(self) -> None:
         """Run a governance cycle — propose and vote on changes."""
         stats = self.society.get_stats()
@@ -212,6 +227,7 @@ class Civilization:
                     logger.warning("  -> Cannot remove agent: population at constitution minimum (10).")
                     
             elif proposal.proposal_type == ProposalType.CHANGE_WORKFLOW:
+                self.workflow_evolver.pipeline_history.append(self.workflow)
                 new_workflow = self.workflow_evolver.propose_mutation(self.workflow, self.society.get_stats())
                 self.workflow = new_workflow
                 logger.info(f"  -> Workflow changed to: {self.workflow.name}")

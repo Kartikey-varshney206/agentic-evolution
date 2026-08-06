@@ -100,3 +100,117 @@ Assuming both shops are rational and aim to maximize their own profit, what is t
 Ground Truth: (Early, Early)
 ==================================================
 
+--- Task 6 (Difficulty 2) ---
+Question: What is the units digit (ones digit) of 7 raised to the power of 2026 (7^2026)?
+Ground Truth: 9
+==================================================
+
+--- Task 7 (Difficulty 2) ---
+Question: Let set A = {2, 4, 6, 8, 10} and set B = {3, 6, 9, 12}. What is the cardinality of the set (A \ B) ∪ (B \ A)?
+Ground Truth: 7
+==================================================
+
+--- Task 8 (Difficulty 2) ---
+Question: Find the smallest three-digit palindrome that is divisible by 11 and has a digit sum of 12.
+Ground Truth: 363
+==================================================
+
+--- Task 9 (Difficulty 2) ---
+Question: A snail is at the bottom of a 10-foot well. During the day, it climbs up 3 feet. At night, it slides back down 2 feet. How many days does it take for the snail to reach the top and get out?
+Ground Truth: 8
+==================================================
+
+--- Task 10 (Difficulty 2) ---
+Question: A message was encrypted using a Caesar cipher with a shift of 3 (each letter replaced by the letter 3 positions later in the alphabet, wrapping from Z to A). The ciphertext is 'KHOOR'. What is the original plaintext message?
+Ground Truth: HELLO
+==================================================
+
+--- Task 11 (Difficulty 3) ---
+Question: A right triangle has legs measuring 6 cm and 8 cm. A square is constructed on the hypotenuse of this triangle. What is the area of the square in square centimeters?
+Ground Truth: 100
+==================================================
+
+--- Task 12 (Difficulty 3) ---
+Question: A message was encrypted with a Caesar cipher where the shift value equals the smallest prime factor of 91. The resulting ciphertext is 'OLSSV'. What is the original plaintext message?
+Ground Truth: HELLO
+==================================================
+
+--- Task 13 (Difficulty 3) ---
+Question: Car A passes a checkpoint traveling at a constant velocity of 20 m/s. Exactly 5 seconds later, Car B starts from rest at the same checkpoint with a constant acceleration of 4 m/s². How many seconds after Car B starts moving will it catch up to Car A?
+Ground Truth: 5 + 5√3 seconds
+==================================================
+
+--- Task 14 (Difficulty 3) ---
+Question: An Affine Cipher encrypts letters using the function E(x) = (5x + 8) mod 26, where A=0, B=1, ..., Z=25. You intercept the ciphertext 'RCLLA'. What is the original plaintext message?
+Ground Truth: HELLO
+==================================================
+
+--- Task 15 (Difficulty 3) ---
+Question: Consider the following two-player normal-form game. Payoffs are written as (Player 1, Player 2).
+
+Player 2
+       L       R
+   U (4, 2)  (1, 1)
+P1 D (2, 4)  (3, 3)
+
+Assuming both players are rational and the game is played once, what is the payoff profile (Player 1 payoff, Player 2 payoff) at the unique pure-strategy Nash Equilibrium?
+Ground Truth: (4, 2)
+==================================================
+
+--- Task 16 (Difficulty 4) ---
+Question: Find the smallest positive integer x that satisfies the following system of congruences: x ≡ 2 (mod 3), x ≡ 3 (mod 4), x ≡ 4 (mod 5).
+Ground Truth: 59
+==================================================
+
+--- Task 17 (Difficulty 4) ---
+Question: A hot air balloon is ascending vertically at a constant velocity of 5 m/s. When the balloon is 50 meters above the ground, a sandbag is released from it (initial velocity same as balloon). Simultaneously, a second sandbag is thrown vertically upward from the ground with an initial velocity of 20 m/s. Assuming acceleration due to gravity is 10 m/s² and air resistance is negligible, at what height above the ground do the two sandbags meet?
+Ground Truth: 100/9 meters (approx 11.11 meters)
+==================================================
+
+--- Task 18 (Difficulty 4) ---
+Question: Find the smallest positive integer N such that N is divisible by 12, the sum of its digits is 15, and N leaves a remainder of 3 when divided by 7.
+Ground Truth: 1344
+==================================================
+
+--- Task 19 (Difficulty 4) ---
+Question: A positive integer N leaves a remainder of 2 when divided by 3, a remainder of 3 when divided by 5, and a remainder of 2 when divided by 7. What is the smallest possible value of N?
+Ground Truth: 23
+==================================================
+
+--- Task 20 (Difficulty 4) ---
+Question: A man lives on the 12th floor of an apartment building. Every morning he takes the elevator down to the ground floor to go to work. When he returns, if it is raining, or if there are other people in the elevator, he goes directly to the 12th floor. Otherwise, he goes to the 10th floor and walks up two flights of stairs to his apartment. Why does he do this?
+Ground Truth: The man is a dwarf (or child) and cannot reach the button for the 12th floor unless he uses an umbrella or someone else presses it for him.
+==================================================
+
+--- Task 21 (Difficulty 5) ---
+Question: A speeder traveling at a constant 30 m/s passes a stationary police car. The speeder immediately begins braking with a constant deceleration of 2 m/s². The police officer has a reaction time of 1.0 second before accelerating from rest at a constant 3 m/s². At what time t (in seconds) after the speeder passes does the police car catch the speeder?
+Ground Truth: 13.15
+==================================================
+
+--- Task 22 (Difficulty 5) ---
+Question: A committee of 5 people is to be formed from a group of 8 men and 7 women. The committee must include at least 2 men and at least 2 women. Additionally, two specific women, Alice and Betty, refuse to serve on the committee together. How many different committees can be formed?
+Ground Truth: 1960
+==================================================
+
+--- Task 23 (Difficulty 5) ---
+Question: Consider the following 2x2 normal-form game with payoffs (Player 1, Player 2). Player 1 chooses rows (Up, Down), Player 2 chooses columns (Left, Right).
+
+Up-Left: (2, 1)
+Up-Right: (0, 3)
+Down-Left: (1, 2)
+Down-Right: (3, 0)
+
+This game has no Pure Strategy Nash Equilibrium. In the unique Mixed Strategy Nash Equilibrium, what is the probability that Player 1 plays 'Up'? Express your answer as a simplified fraction.
+Ground Truth: 1/2
+==================================================
+
+--- Task 24 (Difficulty 5) ---
+Question: A circle of radius 5 is inscribed in a square. A second, smaller square is inscribed in the circle such that its vertices lie on the circle. An equilateral triangle is constructed on one side of the smaller square, lying entirely outside the smaller square but inside the circle. What is the area of the region inside the circle but outside both the smaller square and the equilateral triangle? Round your answer to two decimal places.
+Ground Truth: 33.37
+==================================================
+
+--- Task 24 (Difficulty 5) ---
+Question: In a Diffie-Hellman key exchange, Alice and Bob agree on a prime modulus p = 23 and a base g = 5. Alice chooses a secret integer a = 6 and sends Bob A = g^a mod p. Bob chooses a secret integer b = 15 and sends Alice B = g^b mod p. They both compute the shared secret key s. An eavesdropper, Eve, intercepts A and B. If Eve attempts a brute-force attack by trying all possible values for Bob's secret integer b (assuming she knows 1 <= b <= 21), what is the value of the shared secret key s that she will eventually find?
+Ground Truth: 2
+==================================================
+

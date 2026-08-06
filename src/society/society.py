@@ -17,7 +17,8 @@ from typing import Any
 
 from ..agents.agent import Agent
 from ..agents.factory import load_agents_from_config
-from .discussion import DiscussionEngine
+from .workflow_engine import WorkflowEngine
+from ..workflow.pipeline import WorkflowPipeline
 from ..llm.client import LLMClient
 
 logger = logging.getLogger(__name__)
@@ -59,8 +60,8 @@ class Society:
         # Load initial population
         self._load_initial_agents(agents_config)
 
-        # Initialize discussion engine
-        self.discussion_engine = DiscussionEngine(self.llm)
+        # Initialize workflow engine
+        self.workflow_engine = WorkflowEngine(self.llm)
 
         logger.info(
             f"Society initialized with {len(self.agents)} agents "
@@ -78,7 +79,7 @@ class Society:
 
     # ── Core Task Processing ──
 
-    def solve(self, task: str, ground_truth: str | None = None) -> TaskResult:
+    def solve(self, task: str, ground_truth: str | None = None, workflow: WorkflowPipeline | None = None) -> TaskResult:
         """
         Route a task through the AI society for collaborative solving.
 
@@ -105,11 +106,22 @@ class Society:
                 discussion_log=[],
             )
 
-        # Run discussion
-        discussion_result = self.discussion_engine.run_discussion(
+        # Run discussion via Workflow Engine
+        if not workflow:
+            # Fallback for older execution paths
+            logger.error("No workflow provided to solve(). Cannot execute DAG.")
+            return TaskResult(
+                task_id=task_id,
+                task_description=task,
+                final_answer="ERROR: No workflow pipeline provided.",
+                agent_responses={},
+                discussion_log=[],
+            )
+
+        discussion_result = self.workflow_engine.execute(
             task=task,
             agents=active_agents,
-            rounds=2,
+            pipeline=workflow,
         )
 
         # Build result
