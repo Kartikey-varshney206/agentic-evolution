@@ -86,10 +86,13 @@ class LLMClient:
         model: str | None = None,
         temperature: float = 0.7,
         max_tokens: int = 1024,
+        use_fallback: bool = True,
     ):
         self.provider = provider or os.getenv("LLM_PROVIDER", "nvidia")
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self.use_fallback = use_fallback
+        self.fallback_client = None
 
         if self.provider in PROVIDER_CONFIGS:
             config = PROVIDER_CONFIGS[self.provider]
@@ -107,6 +110,17 @@ class LLMClient:
             raise ValueError(
                 f"Unknown LLM provider: {self.provider}. "
                 f"Supported: {', '.join(list(PROVIDER_CONFIGS.keys()) + ['ollama'])}"
+            )
+
+        # Initialize fallback if enabled
+        fallback_provider = os.getenv("LLM_FALLBACK_PROVIDER")
+        if self.use_fallback and fallback_provider and fallback_provider != self.provider:
+            logger.info(f"Setting up fallback provider: {fallback_provider}")
+            self.fallback_client = LLMClient(
+                provider=fallback_provider,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                use_fallback=False  # Prevent infinite fallback chains
             )
 
         # Track cumulative token usage
@@ -175,17 +189,24 @@ class LLMClient:
             {"role": "user", "content": user_message},
         ]
 
-        if self.provider in PROVIDER_CONFIGS:
-            return self._chat_openai_compatible(messages, temp, tokens)
-        else:
-            return self._chat_ollama(messages, temp, tokens)
+        try:
+            if self.provider in PROVIDER_CONFIGS:
+                return self._chat_openai_compatible(messages, temp, tokens)
+            else:
+                return self._chat_ollama(messages, temp, tokens)
+        except Exception as e:
+            if self.fallback_client:
+                logger.warning(f"Primary provider '{self.provider}' failed: {e}. Falling back to '{self.fallback_client.provider}'!")
+                return self.fallback_client.chat(system_prompt, user_message, temp, tokens)
+            else:
+                raise
 
     from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
     import httpx
 
     @retry(
-        wait=wait_exponential(multiplier=2, min=5, max=60),
-        stop=stop_after_attempt(10),
+        wait=wait_exponential(multiplier=2, min=2, max=10),
+        stop=stop_after_attempt(3),
         retry=retry_if_exception_type(Exception),
         reraise=True
     )
