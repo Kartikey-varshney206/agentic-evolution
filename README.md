@@ -16,7 +16,9 @@ The society isn't static. It **evolves computationally**:
 - 🌱 **Reproduction:** New agents are born by combining traits of top performers.
 - ☠️ **Natural Selection:** Bottom-performing agents are killed off.
 - 🗳️ **Democratic Governance:** Agents propose and vote on structural workflow changes.
+- 🔄 **Workflow Topology Evolution:** The society physically rewrites its own code execution DAG (Directed Acyclic Graph) to optimize for API token usage and accuracy, utilizing A/B testing to automatically roll back bad mutations.
 - 🌍 **Dynamic Environment:** A "Game Master" engine procedurally generates increasingly difficult tasks for the society to adapt to.
+
 
 ---
 
@@ -140,6 +142,7 @@ streamlit run src/dashboard/app.py --server.enableCORS false --server.enableXsrf
 | `society/` | Orchestrates the multi-agent debate, discussion rules, and peer review synthesis. |
 | `evolution/` | Handles fitness scoring, natural selection, random genetic mutation, and crossover reproduction. |
 | `governance/` | Allows agents to computationally vote on systemic changes to their own processing workflow. |
+| `workflow/` | A dynamic DAG topology executor that runs tasks through self-modifying pipelines with automatic A/B testing rollbacks. |
 | `environment/` | A procedural "Game Master" engine that authors novel logic puzzles with objective ground truths. |
 | `dashboard/` | A Streamlit app that parses the `civilization_state.json` file for real-time visualization. |
 
