@@ -148,6 +148,32 @@ streamlit run src/dashboard/app.py --server.enableCORS false --server.enableXsrf
 
 ---
 
+## 📁 Repository Structure
+
+```text
+agentic-evolution/
+├── config/
+│   ├── default_agents.yaml       # Initial cognitive parameters for starting population
+│   ├── default_workflow.yaml     # Baseline logic graph (DAG) for tasks
+│   └── evolution_params.yaml     # Mutation rates, carrying capacity, etc.
+├── src/
+│   ├── main.py                   # The infinite loop orchestrator
+│   ├── agents/                   # Agent memory, traits, and LLM prompting
+│   ├── dashboard/                # Streamlit control room UI
+│   ├── environment/              # Procedural task generator (Game Master)
+│   ├── evaluation/               # Evaluates agent accuracy against ground truth
+│   ├── evolution/                # Natural selection, mutation, and reproduction
+│   ├── governance/               # Proposals, voting, and the Constitution
+│   ├── llm/                      # Async API clients (NVIDIA, Groq, local)
+│   ├── society/                  # Holds the population and executes workflows
+│   └── workflow/                 # The DAG parser and structural mutator
+├── civilization_state.json       # The persistent "save file" for the entire world
+├── .env.example                  # Environment variables template
+└── pyproject.toml                # Project metadata and dependencies
+```
+
+---
+
 <div align="center">
   <i>Built for autonomous AI systems research.</i>
 </div>
